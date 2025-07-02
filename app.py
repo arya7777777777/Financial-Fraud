@@ -24,7 +24,7 @@ st.title("💼 Financial Fraud Detection Dashboard")
 # ✅ DIRECT file name - no separate path logic
 @st.cache_data
 def load_data():
-    return pd.read_csv("synthetic_fraud_survey.csv")
+    return pd.read_csv("synthetic_fraud_survey_download.csv")
 
 df = load_data()
 
