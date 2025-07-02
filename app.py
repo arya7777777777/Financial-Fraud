@@ -20,7 +20,7 @@ st.title("Financial Fraud Detection Dashboard")
 # Load Data
 @st.cache_data
 def load_data():
-    df = pd.read_csv('data/synthetic_fraud_survey.csv')
+    df = pd.read_csv('synthetic_fraud_survey.csv')
     return df
 
 df = load_data()
