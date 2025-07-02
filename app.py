@@ -17,13 +17,7 @@ import seaborn as sns
 st.set_page_config(page_title="Financial Fraud Dashboard", layout="wide")
 st.title("Financial Fraud Detection Dashboard")
 
-# Load Data
-@st.cache_data
-def load_data():
-    df = pd.read_csv('synthetic_fraud_survey.csv')
-    return df
-
-df = load_data()
+df = pd.read_csv('synthetic_fraud_survey.csv')
 
 # Sidebar
 st.sidebar.title("Navigation")
