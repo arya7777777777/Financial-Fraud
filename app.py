@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import os
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import (
@@ -17,18 +18,21 @@ from mlxtend.frequent_patterns import apriori, association_rules
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+# ✅ Streamlit page config
 st.set_page_config(page_title="Financial Fraud Dashboard", layout="wide")
-st.title("Financial Fraud Detection Dashboard")
+st.title("💼 Financial Fraud Detection Dashboard")
 
-# ✅ Load data from the same folder as app.py
+# ✅ Robust path to CSV
+DATA_PATH = os.path.join(os.path.dirname(__file__), "synthetic_fraud_survey.csv")
+
+# ✅ Load Data
 @st.cache_data
 def load_data():
-    df = pd.read_csv("synthetic_fraud_survey.csv")
-    return df
+    return pd.read_csv(DATA_PATH)
 
 df = load_data()
 
-# Sidebar navigation
+# ✅ Sidebar Navigation
 st.sidebar.title("Navigation")
 tabs = [
     "Data Visualization",
@@ -39,14 +43,14 @@ tabs = [
 ]
 choice = st.sidebar.radio("Go to", tabs)
 
-# Helper function for encoding categorical columns
+# ✅ Helper function for encoding categorical targets
 le = LabelEncoder()
 def encode_column(col):
     return le.fit_transform(col.astype(str))
 
-# ✅ Data Visualization
+# ✅ Data Visualization Tab
 if choice == "Data Visualization":
-    st.subheader("Descriptive Insights")
+    st.subheader("📊 Descriptive Insights")
 
     col1, col2 = st.columns(2)
 
@@ -64,14 +68,13 @@ if choice == "Data Visualization":
 
     st.write("Correlation Heatmap")
     numeric_df = df.select_dtypes(include=np.number)
-    fig, ax = plt.subplots(figsize=(10, 8))
+    fig, ax = plt.subplots(figsize=(10,8))
     sns.heatmap(numeric_df.corr(), annot=True, fmt=".2f", cmap="coolwarm", ax=ax)
     st.pyplot(fig)
 
-# ✅ Classification
+# ✅ Classification Tab
 elif choice == "Classification":
-    st.subheader("Classification Models")
-    st.write("Train and evaluate multiple classifiers.")
+    st.subheader("🤖 Classification Models")
 
     target = st.selectbox("Select target variable (must be categorical)", df.columns)
     if target:
@@ -91,6 +94,7 @@ elif choice == "Classification":
 
         results = []
         y_probs = {}
+
         for name, model in models.items():
             model.fit(X_train, y_train)
             y_pred = model.predict(X_test)
@@ -103,7 +107,7 @@ elif choice == "Classification":
             f1 = f1_score(y_test, y_pred, average="weighted", zero_division=0)
             results.append((name, acc, prec, rec, f1))
 
-        st.write("Performance Metrics")
+        st.write("Performance Metrics:")
         st.table(pd.DataFrame(
             results,
             columns=["Model", "Accuracy", "Precision", "Recall", "F1-score"]
@@ -114,11 +118,11 @@ elif choice == "Classification":
             model = models[selected_model]
             y_pred = model.predict(X_test)
             cm = confusion_matrix(y_test, y_pred)
-            st.write("Confusion Matrix")
+            st.write("Confusion Matrix:")
             st.write(pd.DataFrame(cm))
 
         # ROC Curve
-        st.write("ROC Curve (for models supporting probabilities)")
+        st.write("ROC Curve (for models supporting probabilities):")
         fig, ax = plt.subplots()
         for name, y_prob in y_probs.items():
             fpr, tpr, _ = roc_curve(y_test, y_prob)
@@ -131,17 +135,17 @@ elif choice == "Classification":
         ax.legend()
         st.pyplot(fig)
 
-# ✅ Clustering (skeleton)
+# ✅ Clustering Tab
 elif choice == "Clustering":
-    st.subheader("Clustering (K-Means)")
-    st.write("This section will allow you to cluster data.")
+    st.subheader("🔍 Clustering (K-Means)")
+    st.write("This section will allow you to cluster data and explore segments.")
 
-# ✅ Association Rule Mining (skeleton)
+# ✅ Association Rule Mining Tab
 elif choice == "Association Rule Mining":
-    st.subheader("Association Rule Mining")
-    st.write("This section will show frequent itemsets.")
+    st.subheader("🧩 Association Rule Mining")
+    st.write("This section will display frequent itemsets and rules.")
 
-# ✅ Regression (skeleton)
+# ✅ Regression Tab
 elif choice == "Regression":
-    st.subheader("Regression Analysis")
-    st.write("This section will show regression models.")
+    st.subheader("📈 Regression Analysis")
+    st.write("This section will show regression model outputs.")
