@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import os
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import (
@@ -18,21 +17,18 @@ from mlxtend.frequent_patterns import apriori, association_rules
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# ✅ Streamlit page config
+# Streamlit page config
 st.set_page_config(page_title="Financial Fraud Dashboard", layout="wide")
 st.title("💼 Financial Fraud Detection Dashboard")
 
-# ✅ Robust path to CSV
-DATA_PATH = os.path.join(os.path.dirname(__file__), "synthetic_fraud_survey.csv")
-
-# ✅ Load Data
+# ✅ DIRECT file name - no separate path logic
 @st.cache_data
 def load_data():
-    return pd.read_csv(DATA_PATH)
+    return pd.read_csv("synthetic_fraud_survey.csv")
 
 df = load_data()
 
-# ✅ Sidebar Navigation
+# Sidebar Navigation
 st.sidebar.title("Navigation")
 tabs = [
     "Data Visualization",
@@ -43,12 +39,12 @@ tabs = [
 ]
 choice = st.sidebar.radio("Go to", tabs)
 
-# ✅ Helper function for encoding categorical targets
+# Helper function for encoding categorical targets
 le = LabelEncoder()
 def encode_column(col):
     return le.fit_transform(col.astype(str))
 
-# ✅ Data Visualization Tab
+# Data Visualization
 if choice == "Data Visualization":
     st.subheader("📊 Descriptive Insights")
 
@@ -72,7 +68,7 @@ if choice == "Data Visualization":
     sns.heatmap(numeric_df.corr(), annot=True, fmt=".2f", cmap="coolwarm", ax=ax)
     st.pyplot(fig)
 
-# ✅ Classification Tab
+# Classification
 elif choice == "Classification":
     st.subheader("🤖 Classification Models")
 
@@ -135,17 +131,17 @@ elif choice == "Classification":
         ax.legend()
         st.pyplot(fig)
 
-# ✅ Clustering Tab
+# Clustering (skeleton)
 elif choice == "Clustering":
     st.subheader("🔍 Clustering (K-Means)")
     st.write("This section will allow you to cluster data and explore segments.")
 
-# ✅ Association Rule Mining Tab
+# Association Rule Mining (skeleton)
 elif choice == "Association Rule Mining":
     st.subheader("🧩 Association Rule Mining")
     st.write("This section will display frequent itemsets and rules.")
 
-# ✅ Regression Tab
+# Regression (skeleton)
 elif choice == "Regression":
     st.subheader("📈 Regression Analysis")
     st.write("This section will show regression model outputs.")
